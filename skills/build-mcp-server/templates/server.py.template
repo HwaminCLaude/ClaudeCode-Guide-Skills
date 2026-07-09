@@ -1,0 +1,48 @@
+# 이 파일은 생성 결과의 "목표 형태"를 보여주는 참고용 골격이다.
+# 실제 server.py는 scripts/render_server.py 가 ServerSpec으로부터 만든다.
+# (강의의 "완성 코드 한 장" — 설계도의 5조각 구조를 그대로 따른다.)
+
+# ① 준비 --------------------------------------------------------------
+import sys
+import logging
+
+from mcp.server.fastmcp import FastMCP  # SDK 내장 FastMCP 1.0 (별도 fastmcp 패키지와 섞지 말 것)
+
+# stdio 위생: stdout은 JSON-RPC 전용. 로그는 반드시 stderr로.
+logging.basicConfig(level=logging.INFO, stream=sys.stderr)
+log = logging.getLogger("my-first-mcp")
+
+mcp = FastMCP("my-first-mcp")
+
+
+# ② 도구 · Tool -------------------------------------------------------
+@mcp.tool()
+def get_weather(city: str) -> str:
+    """도시의 현재 날씨를 알려줍니다. 사용자가 특정 도시 날씨를 물을 때 호출하세요.
+
+    Args:
+        city: 날씨를 조회할 도시 이름.
+    """
+    # (검증 예시) 빈 입력 방어
+    if not city or not city.strip():
+        return "도시 이름이 필요합니다."
+    return f"{city}: 맑음, 23°C"
+
+
+# ③ 자료실 · Resource -------------------------------------------------
+@mcp.resource("menu://today")
+def today_menu() -> str:
+    """오늘의 메뉴판."""
+    return "파스타 · 리조또 · 샐러드"
+
+
+# ④ 레시피 · Prompt ---------------------------------------------------
+@mcp.prompt()
+def summarize(text: str) -> str:
+    """3줄 요약 템플릿."""
+    return f"다음 글을 3줄로 요약해줘: {text}"
+
+
+# ⑤ 실행 -------------------------------------------------------------
+if __name__ == "__main__":
+    mcp.run(transport="stdio")

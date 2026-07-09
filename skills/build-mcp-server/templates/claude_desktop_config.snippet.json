@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "{{serverName}}": {
+      "command": "uv",
+      "args": ["run", "--directory", "{{projectDirEscaped}}", "python", "{{serverName}}.py"],
+      "env": {
+        "_comment": "여기에 필요한 키를 넣으세요. 예: MY_API_KEY. 값은 커밋하지 마세요."
+      }
+    }
+  }
+}

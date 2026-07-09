@@ -1,0 +1,72 @@
+{
+  "meta": {
+    "serverName": "stat-advisor",
+    "teachMode": "teach",
+    "userLevel": "some",
+    "problem": "AI가 데이터를 보고 올바른 통계 검정을 스스로 고르도록 유도하는 서버",
+    "archetype": "analysis-workflow"
+  },
+  "tools": [
+    {
+      "name": "inspect_data",
+      "job": "데이터 구조 파악",
+      "docstring": "데이터 구조를 파악합니다. 어떤 검정이든 반드시 이 도구를 먼저 호출하세요.",
+      "orderTag": "[1단계 - 필수 선행]",
+      "sideEffecting": false,
+      "params": [
+        {"name": "data", "type": "str", "desc": "CSV 또는 JSON 형식의 데이터"}
+      ],
+      "returnShape": "result_next_step"
+    },
+    {
+      "name": "check_assumptions",
+      "job": "가정 검정 + 추천",
+      "docstring": "정규성·등분산성을 검정하고 적절한 검정 방법을 추천합니다. run_test 전에 필수입니다.",
+      "orderTag": "[2단계 - 필수 선행]",
+      "sideEffecting": false,
+      "params": [
+        {"name": "data", "type": "str", "desc": "inspect_data 로 확인한 데이터"}
+      ],
+      "returnShape": "result_next_step"
+    },
+    {
+      "name": "run_test",
+      "job": "검정 실행 + 해석 가이드",
+      "docstring": "recommendation 에 따라 검정을 선택하세요. 다른 검정을 쓰려면 이유를 사용자에게 설명해야 합니다.",
+      "orderTag": "[3단계]",
+      "sideEffecting": false,
+      "params": [
+        {"name": "data", "type": "str", "desc": "검정할 데이터"},
+        {"name": "test", "type": "str", "desc": "welch, student, mann_whitney 등"}
+      ],
+      "returnShape": "number_interpretation"
+    },
+    {
+      "name": "sample_size_for_ttest",
+      "job": "표본 수 계산",
+      "docstring": "원하는 효과크기와 검정력에 필요한 표본 수를 계산합니다.",
+      "orderTag": null,
+      "sideEffecting": false,
+      "params": [
+        {"name": "effect", "type": "float", "desc": "기대 효과크기(Cohen's d)"},
+        {"name": "power", "type": "float", "desc": "원하는 검정력(예: 0.8)"}
+      ],
+      "returnShape": "number_interpretation"
+    }
+  ],
+  "resources": [],
+  "prompts": [],
+  "ordered": true,
+  "security": {
+    "privilege": "readonly-dir",
+    "secrets": {"mode": "none", "keys": []},
+    "validation": ["type-schema"],
+    "approvalGate": true
+  },
+  "runtime": {
+    "transport": "stdio",
+    "rehearse": true,
+    "register": "both",
+    "projectDir": "C:\\Users\\HOSEO\\Desktop\\claude"
+  }
+}

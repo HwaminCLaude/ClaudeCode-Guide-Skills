@@ -1,0 +1,17 @@
+# 비밀·로컬 파일 커밋 방지 (MCP 서버 프로젝트)
+.env
+.env.*
+!.env.example
+
+# 설정 병합 백업
+*.bak-*
+
+# Claude 로컬 설정 / Desktop 설정 (키가 들어갈 수 있음)
+.claude/settings.local.json
+claude_desktop_config.json
+claude_desktop_config.snippet.json
+
+# uv / python
+.venv/
+__pycache__/
+*.pyc
